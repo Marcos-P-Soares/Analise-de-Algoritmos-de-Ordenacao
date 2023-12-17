@@ -1,7 +1,5 @@
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.Random;
 
 public class App {
 
@@ -22,23 +20,33 @@ public class App {
 
     // Função de ordenação Counting Sort
     public static int[] countingSort(int[] arr) {
-        int max_value = Arrays.stream(arr).max().orElse(0);
-        int[] counts = new int[max_value + 1];
+        int n = arr.length;
 
-        for (int num : arr) {
-            counts[num]++;
-        }
-
-        int[] sortedArr = new int[arr.length];
-        int k = 0;
-
-        for (int i = 0; i < counts.length; i++) {
-            for (int j = 0; j < counts[i]; j++) {
-                sortedArr[k++] = i;
+        // Encontrar o valor máximo no array
+        int max = arr[0];
+        for (int i = 1; i < n; i++) {
+            if (arr[i] > max) {
+                max = arr[i];
             }
         }
+        // Criar um array de contagem
+        int[] count = new int[max + 1];
 
-        return sortedArr;
+        // Contar as ocorrências de cada elemento
+        for (int i = 0; i < n; i++) {
+            count[arr[i]]++;
+        }
+
+         // Reconstruir o array ordenado
+        int[] sortedArray = new int[n];
+        int index = 0;
+        for (int i = 0; i <= max; i++) {
+            while (count[i] > 0) {
+                sortedArray[index++] = i;
+                count[i]--;
+            }
+        }
+         return sortedArray;
     }
 
     // Função de ordenação Insertion Sort
@@ -141,21 +149,15 @@ public class App {
 
 
     // Função para gerar um array de números aleatórios e únicos
-    public static int[] generateRandomUniqueArray(int size) {
-        if (size > 1000000) {
-            size = 1000000;
+    public static int[] generateRandomArray(int size) {
+        int[] dataSet = new int[size];
+        Random random = new Random();
+
+        for (int i = 0; i < size; i++) {
+            dataSet[i] = random.nextInt(size + 1);
         }
 
-        List<Integer> uniqueNumbers = new ArrayList<>();
-        for (int i = 1; i <= 1000000; i++) {
-            uniqueNumbers.add(i);
-        }
-
-        Collections.shuffle(uniqueNumbers);
-
-        List<Integer> result = uniqueNumbers.subList(0, size);
-
-        return result.stream().mapToInt(Integer::intValue).toArray();
+        return dataSet;
     }
 
     // Função auxiliar para concatenar arrays
@@ -185,7 +187,7 @@ public class App {
     }
 
     public static void main(String[] args) {
-        int[] randomArray = generateRandomUniqueArray(1000000);
+        int[] randomArray = generateRandomArray(200000);
 
         // Tamanhos dos subarrays a serem testados
         int[] sizes = {100, 500, 1000, 5000, 30000, 80000, 100000, 150000, 200000};
